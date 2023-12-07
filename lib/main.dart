@@ -1,9 +1,27 @@
+import 'package:animation/game/screen/game_over%20_screen.dart';
+import 'package:animation/game/screen/main_menu_screen.dart';
 import 'package:animation/login_page.dart';
 import 'package:animation/toggle_button_animation.dart';
+
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
+import 'game/flappy_bird_game.dart';
+
 void main() {
-  runApp(const MyApp());
+  final game = FlappyBirdGame();
+  runApp(
+    GameWidget(
+      game: game,
+      initialActiveOverlays: const [
+        MainMenuScreen.id,
+      ],
+      overlayBuilderMap: {
+        'MainMenu': (ctx, _) => MainMenuScreen(flappyBirdGame: game),
+        GameOverScreen.id: (ctx, _) => GameOverScreen(flappyBirdGame: game),
+      },
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,14 +51,15 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>  with SingleTickerProviderStateMixin{
-
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
 
   @override
@@ -50,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage>  with SingleTickerProviderState
       duration: const Duration(seconds: 2),
       vsync: this,
     )..forward();
-
   }
 
   @override
@@ -67,17 +85,14 @@ class _MyHomePageState extends State<MyHomePage>  with SingleTickerProviderState
               size: 150,
             ),
           ),
-
           const ToggleButtonWidget(),
-
           RawMaterialButton(
             fillColor: Colors.blueAccent,
-            onPressed: (){
-              Navigator.push(context,MaterialPageRoute(builder: (_) => const LoginPage()));
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()));
             },
-            child: const Text(
-              'Login Page'
-            ),
+            child: const Text('Login Page'),
           )
         ],
       ),
